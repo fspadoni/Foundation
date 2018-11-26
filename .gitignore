@@ -1,0 +1,7 @@
+# Lines that begin with '#' are comments.
+
+# Ignore any build dirs
+build*
+
+# Ignore all objets and archives
+#*.[oa]
