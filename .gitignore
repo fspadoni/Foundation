@@ -3,5 +3,8 @@
 # Ignore any build dirs
 build*
 
+# Ignore third party dirs
+third_party
+
 # Ignore all objets and archives
 #*.[oa]

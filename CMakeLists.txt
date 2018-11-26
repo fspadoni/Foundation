@@ -27,7 +27,7 @@ option(BUILD_FOUNDATION_STATIC "Build as static library" ON)
 
 add_subdirectory(foundation)
 
-# add_subdirectory(tools)
+add_subdirectory(tools)
 # add_subdirectory(samples)
 
 # add_subdirectory(tests)
