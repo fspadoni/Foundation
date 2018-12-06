@@ -44,7 +44,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 # don't build tests
 set(LLVM_INCLUDE_TOOLS ON CACHE BOOL "" FORCE)
 set(LLVM_BUILD_TOOLS ON CACHE BOOL "" FORCE)
-set(LLVM_INCLUDE_TESTS OFF CACHE BOOL "" FORCE)
+
 set(LLVM_INCLUDE_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(LLVM_INCLUDE_BENCHMARKS OFF CACHE BOOL "" FORCE)
 set(LLVM_APPEND_VC_REV OFF CACHE BOOL "" FORCE)
@@ -52,7 +52,9 @@ set(LLVM_APPEND_VC_REV OFF CACHE BOOL "" FORCE)
 set(LLVM_INCLUDE_GO_TESTS OFF CACHE BOOL "" FORCE)
 set(LLVM_INCLUDE_DOCS OFF CACHE BOOL "" FORCE)
 
+# add gtest
 set(LLVM_INCLUDE_UTILS ON CACHE BOOL "" FORCE)
+set(LLVM_INCLUDE_TESTS ON CACHE BOOL "" FORCE)
 # set(LLVM_BUILD_UTILS OFF CACHE BOOL "" FORCE)
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 
@@ -60,8 +62,10 @@ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 set(LLVM_ENABLE_PROJECTS "llvm/tools/clang" CACHE STRING "" FORCE)
 
 set(CLANG_BUILD_TOOLS OFF CACHE BOOL "" FORCE)
-set(CLANG_ENABLE_STATIC_ANALYZER OFF CACHE BOOL "" FORCE)
+set(CLANG_ENABLE_STATIC_ANALYZER ON CACHE BOOL "" FORCE)
 set(CLANG_ENABLE_ARCMT OFF CACHE BOOL "" FORCE)
+
+set(CLANG_PLUGIN_SUPPORT OFF CACHE BOOL "" FORCE)
 
 
 add_subdirectory(${llvm_SOURCE_DIR} ${llvm_BINARY_DIR})
@@ -83,7 +87,7 @@ message(STATUS "\nLLVM_EXTERNAL_CLANG_SOURCE_DIR " ${LLVM_EXTERNAL_CLANG_SOURCE_
 add_executable(toolTest main.cpp)
 
 # Minimum set of the required Clang libraries for the tool
-target_link_libraries(toolTest ClangAST ClangBasic ClangDriver ClangFrontend ClangRewriteFrontend 
-   ClangStaticAnalyzerFrontend ClangTooling)
+target_link_libraries(toolTest clangAST clangBasic clangDriver clangFrontend clangRewriteFrontend 
+   clangStaticAnalyzerFrontend clangTooling)
 
 

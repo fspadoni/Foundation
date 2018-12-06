@@ -4,6 +4,10 @@ project(foundation)
 
 message(STATUS "\nConfiguring Project " ${PROJECT_NAME} " .. " )
 
+message(STATUS "\nLLVM_SOURCE_DIR " ${LLVM_SOURCE_DIR} " .. " )
+message(STATUS "\nllvm_SOURCE_DIR " ${llvm_SOURCE_DIR} " .. " )
+
+
 
 
 file(GLOB foundation_source_files "src/*.cpp")
@@ -39,6 +43,8 @@ set( CODEGEN_BIN_NAME "tool")
 
 
 
+include_directories(src)
+include_directories(src/platform)
 include_directories(.)
 include_directories(generated)
 

@@ -36,7 +36,15 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 #                         "${gmock_SOURCE_DIR}/include")
 # endif()
 
+message(STATUS "\nLLVM_SOURCE_DIR " ${LLVM_SOURCE_DIR} " .. " )
+include_directories(${LLVM_SOURCE_DIR}/utils/unittest/googletest/include)
+include_directories(${LLVM_SOURCE_DIR}/utils/unittest/googlemock/include)
+
+add_definitions( -DGTEST_NO_LLVM_RAW_OSTREAM=1 )
+# set(LLVM_LINK_COMPONENTS  Support )
+
 # Trivial example using gtest and gmock
-add_executable(example example.cpp)
-target_link_libraries(example gtest gmock_main)
-# add_test(NAME example_test COMMAND example)
+add_executable(example1 example.cpp)
+
+target_link_libraries(example1 foundation_static gtest gtest_main)
+# target_link_libraries(${test_name} PRIVATE gtest_main gtest ${LLVM_PTHREAD_LIB})
