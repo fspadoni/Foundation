@@ -7,52 +7,102 @@ message(STATUS "\nConfiguring Project " ${PROJECT_NAME} " .. " )
 message(STATUS "\nLLVM_SOURCE_DIR " ${LLVM_SOURCE_DIR} " .. " )
 message(STATUS "\nllvm_SOURCE_DIR " ${llvm_SOURCE_DIR} " .. " )
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
+set ( FOUNDATION_HEADER_FILES
+	src/TaskScheduler.h
+	src/Task.h
+ 	src/Task.inl
+ 	
+)
 
-file(GLOB foundation_source_files "src/*.cpp")
-file(GLOB foundation_header_files "src/*.h" "src/*.inl")
+set ( FOUNDATION_PROC_FILES
+ 	src/TaskScheduler.h
+ 	src/Task.h
+)
+
+set ( FOUNDATION_SOURCE_FILES
+ 	src/TaskScheduler.cpp
+ 	src/Task.cpp
+)
+
 
 if(MACOSX OR APPLE)
-	file( GLOB foundation_platform_include  "src/platform/mac/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/mac/*.h" )
 elseif(LINUX)
-	file( GLOB foundation_platform_include  "src/platform/linux/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/linux/*.h" )
 elseif(WINDOWS)
-	file( GLOB foundation_platform_include  "src/platform/win32/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/win32/*.h" )
 elseif(ANDROID)
-	file( GLOB foundation_platform_include  "src/platform/android/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/android/*.h" )
 endif()
 
 
 # Generation tool invocation command:
-set (CODEGEN_DIR ${CMAKE_CURRENT_BINARY_DIR}/codegen)
-file (MAKE_DIRECTORY ${CODEGEN_DIR}/generated)
+include(AutoGenerate)
 
-set (foundation_source_files_generated ${CODEGEN_DIR}/generated/*.cpp)
-set (foundation_header_files_generated ${CODEGEN_DIR}/generated/*.h)
+set(FOUNDATION_AUTOGEN_FILES "")
 
-set( CODEGEN_BIN_NAME "tool")
+build_autogen(
+	EXECUTABLE_TOOL		toolTest
+    AUTOGEN_DIR 		"${CMAKE_CURRENT_BINARY_DIR}/autogen"
+    AUTOGEN_POSTFIX     "autogen"
+    PROC_FILES 			${FOUNDATION_PROC_FILES}
+    
+    OUT_AUTOGEN_FILES 	FOUNDATION_AUTOGEN_FILES
+	)
+
+message(warning "\n FOUNDATION_AUTOGEN_FILES " ${FOUNDATION_AUTOGEN_FILES} " .. " )
+
+# set( FOUNDATION_AUTOGEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/autogen")
+# file (MAKE_DIRECTORY FOUNDATION_AUTOGEN_DIR)
+
+# set(FOUNDATION_AUTOGEN_FILES "")
+
+# foreach (header_file ${FOUNDATION_PROC_FILES})
+
+# 	get_filename_component(DIRECTORY_NAME ${header_file} DIRECTORY)
+#     get_filename_component(BASE_NAME ${header_file} NAME_WE)
+#     get_filename_component(EXTENSION ${header_file} EXT)
+
+#     # make sure the path is absolute
+#     if (NOT IS_ABSOLUTE ${header_file})
+#         set(DIRECTORY_NAME "${FOUNDATION_AUTOGEN_DIR}/${DIRECTORY_NAME}")
+#     endif ()
+
+# 	file(RELATIVE_PATH REL_AUTOGEN_FILE ${FOUNDATION_AUTOGEN_DIR} "${DIRECTORY_NAME}/${BASE_NAME}_autogen.cpp" )
+# 	set( AUTOGEN_FILE  "${FOUNDATION_AUTOGEN_DIR}/${REL_AUTOGEN_FILE}" )
+
+# 	# that's by default so it should not be necesssary
+#     set_source_files_properties(${AUTOGEN_FILE} PROPERTIES GENERATED TRUE)
+
+#     list(APPEND FOUNDATION_AUTOGEN_FILES ${AUTOGEN_FILE} )
+# endforeach ()
+
+# add_custom_command(
+# 		OUTPUT ${FOUNDATION_AUTOGEN_FILES}
+# 		COMMAND toolTest   ${FOUNDATION_AUTOGEN_DIR}  ${FOUNDATION_PROC_FILES} 
+# 		MAIN_DEPENDENCY ${FOUNDATION_PROC_FILES}
+#     	COMMENT "Generating files for ${CMAKE_CURRENT_SOURCE_DIR}/${header_file_generated}"
+#     )
 
 
-# add_custom_command(OUTPUT ${GENERATED_FILES}
-#    COMMAND ${CODEGEN_BIN_NAME} -o ${GENERATED_FILES}
-#        ${CMAKE_CURRENT_SOURCE_DIR}/generated_test.h -- Clang-cl -std=c++14 -x c++ ${CMAKE_CXX_FLAGS}
-#    MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/test_enums.h
-#    COMMENT "Generating files for ${CMAKE_CURRENT_SOURCE_DIR}/test_enums.h"
-#    )
-
+source_group("autogen" FILES ${FOUNDATION_AUTOGEN_FILES} )
 
 
 include_directories(src)
 include_directories(src/platform)
 include_directories(.)
-include_directories(generated)
+include_directories(${FOUNDATION_AUTOGEN_DIR})
+
 
 if(BUILD_FOUNDATION_SHARED)
   add_library(foundation SHARED
-    ${foundation_source_files}
-    ${foundation_header_files}
-    ${foundation_platform_include}
+    ${FOUNDATION_SOURCE_FILES}
+    ${FOUNDATION_HEADER_FILES}
+    ${FOUNDATION_PLATFORM_INCLUDE}
+    ${FOUNDATION_AUTOGEN_FILES}
   )
   # install(TARGETS foundation RUNTIME DESTINATION lib LIBRARY DESTINATION lib)
   message(STATUS "build shared library" )
@@ -60,17 +110,19 @@ endif(BUILD_FOUNDATION_SHARED)
 
 if(BUILD_FOUNDATION_STATIC)
   add_library(foundation_static STATIC
-    ${foundation_source_files}
-    ${foundation_header_files}
-    ${foundation_platform_include}
+    ${FOUNDATION_SOURCE_FILES}
+    ${FOUNDATION_HEADER_FILES}
+    ${FOUNDATION_PLATFORM_INCLUDE}
+    ${FOUNDATION_AUTOGEN_FILES}
   )
-  # Sets chipmunk_static to output "libchipmunk.a" not "libchipmunk_static.a"
+
   set_target_properties(foundation_static PROPERTIES OUTPUT_NAME foundation)
   # if(INSTALL_FOUNDATION_STATIC)
     # install(TARGETS foundation_static ARCHIVE DESTINATION ${install_dir} )
   # endif(INSTALL_FOUNDATION_STATIC)
   message(STATUS  "build static library" )
 endif(BUILD_FOUNDATION_STATIC)
+
 
 if(BUILD_FOUNDATION_SHARED OR INSTALL_FOUNDATION_STATIC)
   # FIXME: change to PUBLIC_HEADER to allow building frameworks
