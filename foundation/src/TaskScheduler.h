@@ -8,9 +8,9 @@
 #ifndef foundation_TaskScheduler__
 #define foundation_TaskScheduler__
 
-#include "platformDefine.h"
+#include <platformDefine.h>
 
-#include "Task.h"
+#include <Task.h>
 
 #include <thread>
 #include <atomic>
@@ -99,7 +99,6 @@ public:
         unlock();
     }
 
-    
 public:
     
     bool try_lock()

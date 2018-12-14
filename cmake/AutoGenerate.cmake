@@ -46,11 +46,13 @@ function(build_autogen)
 
     add_custom_command(
         OUTPUT ${AUTOGEN_FILES}
-        COMMAND ${EXECUTABLE_TOOL}   ${ARGS_AUTOGEN_DIR}  ${ARGS_PROC_FILES} 
+        COMMAND ${ARGS_EXECUTABLE_TOOL}   ${ARGS_AUTOGEN_DIR}  ${ARGS_PROC_FILES} 
         MAIN_DEPENDENCY ${PROC_FILES}
         COMMENT " .. Generating files with ${ARGS_EXECUTABLE_TOOL} "
     )
 
     set(${ARGS_OUT_AUTOGEN_FILES} "${AUTOGEN_FILES}" PARENT_SCOPE)
+
+    message(warning "\n ARGS_OUT_AUTOGEN_FILES " ${ARGS_OUT_AUTOGEN_FILES} " .. " )
 
 endfunction()

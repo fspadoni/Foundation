@@ -55,39 +55,6 @@ build_autogen(
 
 message(warning "\n FOUNDATION_AUTOGEN_FILES " ${FOUNDATION_AUTOGEN_FILES} " .. " )
 
-# set( FOUNDATION_AUTOGEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/autogen")
-# file (MAKE_DIRECTORY FOUNDATION_AUTOGEN_DIR)
-
-# set(FOUNDATION_AUTOGEN_FILES "")
-
-# foreach (header_file ${FOUNDATION_PROC_FILES})
-
-# 	get_filename_component(DIRECTORY_NAME ${header_file} DIRECTORY)
-#     get_filename_component(BASE_NAME ${header_file} NAME_WE)
-#     get_filename_component(EXTENSION ${header_file} EXT)
-
-#     # make sure the path is absolute
-#     if (NOT IS_ABSOLUTE ${header_file})
-#         set(DIRECTORY_NAME "${FOUNDATION_AUTOGEN_DIR}/${DIRECTORY_NAME}")
-#     endif ()
-
-# 	file(RELATIVE_PATH REL_AUTOGEN_FILE ${FOUNDATION_AUTOGEN_DIR} "${DIRECTORY_NAME}/${BASE_NAME}_autogen.cpp" )
-# 	set( AUTOGEN_FILE  "${FOUNDATION_AUTOGEN_DIR}/${REL_AUTOGEN_FILE}" )
-
-# 	# that's by default so it should not be necesssary
-#     set_source_files_properties(${AUTOGEN_FILE} PROPERTIES GENERATED TRUE)
-
-#     list(APPEND FOUNDATION_AUTOGEN_FILES ${AUTOGEN_FILE} )
-# endforeach ()
-
-# add_custom_command(
-# 		OUTPUT ${FOUNDATION_AUTOGEN_FILES}
-# 		COMMAND toolTest   ${FOUNDATION_AUTOGEN_DIR}  ${FOUNDATION_PROC_FILES} 
-# 		MAIN_DEPENDENCY ${FOUNDATION_PROC_FILES}
-#     	COMMENT "Generating files for ${CMAKE_CURRENT_SOURCE_DIR}/${header_file_generated}"
-#     )
-
-
 source_group("autogen" FILES ${FOUNDATION_AUTOGEN_FILES} )
 
 
