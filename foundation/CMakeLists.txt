@@ -11,31 +11,33 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
 set ( FOUNDATION_HEADER_FILES
-	src/TaskScheduler.h
-	src/Task.h
- 	src/Task.inl
+	async/TaskScheduler.h
+	async/Task.h
+ 	async/Task.inl
+ 	async/TaskSchedulerDefault.h
+ 	async/Locks.h
  	
 )
 
 set ( FOUNDATION_PROC_FILES
- 	src/TaskScheduler.h
- 	src/Task.h
+ 	async/TaskScheduler.h
 )
 
 set ( FOUNDATION_SOURCE_FILES
- 	src/TaskScheduler.cpp
- 	src/Task.cpp
+ 	async/TaskScheduler.cpp
+ 	async/Task.cpp
+ 	async/TaskSchedulerDefault.cpp
 )
 
 
 if(MACOSX OR APPLE)
-	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/mac/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "platform/mac/*.h" )
 elseif(LINUX)
-	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/linux/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "platform/linux/*.h" )
 elseif(WINDOWS)
-	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/win32/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "platform/win32/*.h" )
 elseif(ANDROID)
-	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "src/platform/android/*.h" )
+	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "platform/android/*.h" )
 endif()
 
 
@@ -53,13 +55,13 @@ build_autogen(
     OUT_AUTOGEN_FILES 	FOUNDATION_AUTOGEN_FILES
 	)
 
-message(warning "\n FOUNDATION_AUTOGEN_FILES " ${FOUNDATION_AUTOGEN_FILES} " .. " )
+message(warning "\n FOUNDATION_AUTOGEN_FILES " ${FOUNDATION_AUTOGEN_FILES} )
 
 source_group("autogen" FILES ${FOUNDATION_AUTOGEN_FILES} )
 
 
-include_directories(src)
-include_directories(src/platform)
+# include_directories(src)
+include_directories(platform)
 include_directories(.)
 include_directories(${FOUNDATION_AUTOGEN_DIR})
 

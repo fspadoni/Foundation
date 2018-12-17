@@ -20,7 +20,7 @@ function(build_autogen)
 
     # Generation tool invocation command:
     #set( FOUNDATION_AUTOGEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/autogen")
-    file (MAKE_DIRECTORY ARGS_AUTOGEN_DIR)
+    #file (MAKE_DIRECTORY ARGS_AUTOGEN_DIR)
 
     set(AUTOGEN_FILES "")
 
@@ -30,13 +30,25 @@ function(build_autogen)
         get_filename_component(BASE_NAME ${proc_file} NAME_WE)
         get_filename_component(EXTENSION ${proc_file} EXT)
 
-        # make sure the path is absolute
-        if (NOT IS_ABSOLUTE ${proc_file})
-            set(DIRECTORY_NAME "${ARGS_FOUNDATION_AUTOGEN_DIR}/${DIRECTORY_NAME}")
-        endif ()
+        message(warning "\n DIRECTORY_NAME " ${DIRECTORY_NAME} " .. " )
+        
+        set( FULL_AUTOGEN_DIR ${ARGS_AUTOGEN_DIR}/${DIRECTORY_NAME}  )
+        file (MAKE_DIRECTORY ${FULL_AUTOGEN_DIR} )
+        message(warning "\n FULL_AUTOGEN_DIR " ${FULL_AUTOGEN_DIR} " .. " )
 
-        file(RELATIVE_PATH REL_AUTOGEN_FILE ${ARGS_AUTOGEN_DIR} "${DIRECTORY_NAME}/${BASE_NAME}_${ARGS_AUTOGEN_POSTFIX}.cpp" )
-        set( AUTOGEN_FILE  "${ARGS_AUTOGEN_DIR}/${REL_AUTOGEN_FILE}" )
+        # make sure the path is absolute
+        # if (NOT IS_ABSOLUTE ${proc_file})
+        #     set(DIRECTORY_NAME "${ARGS_FOUNDATION_AUTOGEN_DIR}/${DIRECTORY_NAME}")
+        #     message(warning "\n NOT IS_ABSOLUTE " ${proc_file} " .. " )
+        # endif ()
+
+        # file(RELATIVE_PATH REL_AUTOGEN_FILE ${ARGS_AUTOGEN_DIR} "${DIRECTORY_NAME}/${BASE_NAME}_${ARGS_AUTOGEN_POSTFIX}.cpp" )
+
+        # message(warning "\n REL_AUTOGEN_FILE " ${REL_AUTOGEN_FILE} " .. " )
+
+        set( AUTOGEN_FILE  "${FULL_AUTOGEN_DIR}/${BASE_NAME}_${ARGS_AUTOGEN_POSTFIX}.cpp" )
+
+        message(warning "\n AUTOGEN_FILE " ${AUTOGEN_FILE} " .. " )
 
         # that's by default so it should not be necesssary
         set_source_files_properties(${AUTOGEN_FILE} PROPERTIES GENERATED TRUE)
