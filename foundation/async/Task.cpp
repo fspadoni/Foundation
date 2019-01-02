@@ -7,6 +7,13 @@
 namespace async
 {
 
+    static Task::TaskAllocator TheTaskAllocator;
+    
+    Task::TaskAllocator& Task::GetAllocator()
+    {
+        return TheTaskAllocator;
+    }
+    
     Task::Task(const Task::Status* status)
         : _status(status)
         , _id(0)

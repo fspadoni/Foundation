@@ -45,7 +45,7 @@ namespace async
 
     unsigned TaskSchedulerDefault::GetHardwareThreadsCount()
     {
-        return std::thread::hardware_concurrency() / 2;
+        return std::thread::hardware_concurrency();
     }
 
 
@@ -250,7 +250,7 @@ namespace async
     void WorkerThread::run(void)
     {
         
-        //workerThreadIndexTLS = this;
+        workerThreadIndexTLS = this;
         //TaskSchedulerDefault::_threads[std::this_thread::get_id()] = this;
 
         // main loop

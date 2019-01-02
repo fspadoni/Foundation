@@ -6,6 +6,7 @@
 #include <atomic>
 #include <mutex>
 
+#include <async/LockFreeAllocator.h>
 
 namespace async
 {
@@ -14,6 +15,14 @@ namespace async
     class FoundationDLL Task
     {
     public:
+        // Allocator for small tasks.
+        enum
+        {
+            /** Total size in bytes for a small task that will use the custom allocator **/
+            SMALL_TASK_SIZE = 256            
+        };
+        typedef TLockFreeFixedSizeAllocator_TLSCache<SMALL_TASK_SIZE, PLATFORM_CACHE_LINE_SIZE> TaskAllocator;
+//        typedef TLockFreeFixedSizeAllocator<SMALL_TASK_SIZE, PLATFORM_CACHE_LINE_SIZE> TaskAllocator;
 
         // Task Status class definition
         class Status
@@ -43,6 +52,31 @@ namespace async
         };
 
 
+        static void* operator new(std::size_t sz)
+        {
+            if (sz > SMALL_TASK_SIZE)
+            {
+                return ::operator new(sz);
+            }
+            else
+            {
+                return Task::GetAllocator().Allocate();
+            }
+        }
+        
+        static void operator delete(void* ptr, std::size_t sz)
+        {
+            if (sz > SMALL_TASK_SIZE)
+            {
+                ::operator delete(ptr);
+            }
+            else
+            {
+                return Task::GetAllocator().Free(ptr);
+            }
+        }
+            
+            
         Task(const Task::Status* status = nullptr);
 
         virtual ~Task();
@@ -60,6 +94,9 @@ namespace async
             return const_cast<Task::Status*>(_status);
         }
 
+        /** Singleton to retrieve the small task allocator **/
+        static TaskAllocator& GetAllocator();
+        
     protected:
 
         const Task::Status*    _status;

@@ -45,6 +45,19 @@ add_definitions( -DGTEST_NO_LLVM_RAW_OSTREAM=1 )
 
 # Trivial example using gtest and gmock
 add_executable(example1 example.cpp)
-
 target_link_libraries(example1 foundation_static gtest gtest_main)
 # target_link_libraries(${test_name} PRIVATE gtest_main gtest ${LLVM_PTHREAD_LIB})
+
+
+set ( FOUNDATION_ASYNC_HEADER_FILES
+	async/TaskSchedulerTestTasks.h
+)
+set ( FOUNDATION_ASYNC_SOURCE_FILES
+	async/TaskScheduler_Tests.cpp
+	async/TaskSchedulerTestTasks.cpp
+)
+
+include_directories(.)
+
+add_executable(FoundationAsyncTest ${FOUNDATION_ASYNC_HEADER_FILES} ${FOUNDATION_ASYNC_SOURCE_FILES} )
+target_link_libraries(FoundationAsyncTest foundation_static gtest gtest_main)

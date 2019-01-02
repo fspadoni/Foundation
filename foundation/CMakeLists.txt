@@ -13,9 +13,14 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set ( FOUNDATION_HEADER_FILES
 	async/TaskScheduler.h
 	async/Task.h
- 	async/Task.inl
+	async/TasksAllocator.h
  	async/TaskSchedulerDefault.h
  	async/Locks.h
+ 	async/LockFreeDeQueue.h
+ 	async/TaskSchedulerLockFree.h
+ 	async/LockFreeList.h
+ 	async/LockFreeAllocator.h
+ 	async/TaskSchedulerProfiler.h
  	
 )
 
@@ -27,6 +32,9 @@ set ( FOUNDATION_SOURCE_FILES
  	async/TaskScheduler.cpp
  	async/Task.cpp
  	async/TaskSchedulerDefault.cpp
+ 	async/TaskSchedulerLockFree.cpp
+ 	async/TaskSchedulerProfiler.cpp
+ 	async/LockFreeList.cpp
 )
 
 

@@ -1,9 +1,9 @@
-#include <Performance/src/TaskSchedulerProfiler.h>
+#include <async/TaskSchedulerProfiler.h>
 
 #if defined(ENABLE_TASK_SCHEDULER_PROFILER)
 
 
-#include <Performance/src/TaskSchedulerLockFree.h>
+#include <async/TaskSchedulerLockFree.h>
 
 void TaskSchedulerProfiler::flush(std::chrono::time_point<std::chrono::high_resolution_clock> end)
 {

@@ -73,4 +73,8 @@
 #endif
 
 
+#ifndef PLATFORM_CACHE_LINE_SIZE
+#define PLATFORM_CACHE_LINE_SIZE    128
+#endif
+
 #endif /* PlatformConfig_h */
