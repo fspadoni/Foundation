@@ -24,10 +24,10 @@ option(BUILD_FOUNDATION_STATIC "Build as static library" ON)
 # Add third party libs
 # add_subdirectory(third_party)
 
-
+add_subdirectory(tools)
 add_subdirectory(foundation)
 
-add_subdirectory(tools)
+
 # add_subdirectory(samples)
 
 # add_subdirectory(tests)

@@ -7,6 +7,8 @@ message(STATUS "\nConfiguring Project " ${PROJECT_NAME} " .. " )
 message(STATUS "\nLLVM_SOURCE_DIR " ${LLVM_SOURCE_DIR} " .. " )
 message(STATUS "\nllvm_SOURCE_DIR " ${llvm_SOURCE_DIR} " .. " )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
