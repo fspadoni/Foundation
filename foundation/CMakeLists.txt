@@ -57,7 +57,7 @@ include(AutoGenerate)
 set(FOUNDATION_AUTOGEN_FILES "")
 
 build_autogen(
-	EXECUTABLE_TOOL		toolTest
+	EXECUTABLE_TOOL		foundationTool
     AUTOGEN_DIR 		"${CMAKE_CURRENT_BINARY_DIR}/autogen"
     AUTOGEN_POSTFIX     "autogen"
     PROC_FILES 			${FOUNDATION_PROC_FILES}
