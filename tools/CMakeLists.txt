@@ -71,7 +71,12 @@ add_subdirectory(${llvm_SOURCE_DIR} ${llvm_BINARY_DIR})
 # add_subdirectory(${clang_SOURCE_DIR} ${clang_BINARY_DIR})
 
 
-set(SOURCE_FILES main.cpp)
+set(HEADER_FILES 
+	consumer.h)
+
+set(SOURCE_FILES 
+	main.cpp
+	consumer.cpp)
 
 
 
@@ -133,11 +138,14 @@ set( LLVM_LINK_COMPONENTS
 
 
 # Command from the LLVM CMake module
-add_llvm_executable(foundationTool main.cpp)
+add_llvm_executable(foundationTool ${HEADER_FILES} ${SOURCE_FILES} )
 
+
+target_include_directories( foundationTool PUBLIC .)
 
 set( LLVM_LIB_DEPENDENCIES  
 	# ${LLVM_ALL_TARGETS}
+	LLVMCore
 	LLVMSupport 
 	)
 
@@ -147,9 +155,13 @@ set( CLANG_LIB_DEPENDENCIES
 	clangBasic 
 	clangDriver 
 	clangFrontend 
+	clangFrontendTool
 	clangRewriteFrontend 
 	clangStaticAnalyzerFrontend 
 	clangTooling 
+	clangParse
+	clangCodeGen
+	clangLex
 	)
 
 
@@ -182,13 +194,23 @@ include_directories( ${LLVM_INCLUDE_DIR} ${LLVM_MAIN_INCLUDE_DIR} ${LLVM_BINARY_
 
 include_directories( ${clang_SOURCE_DIR}/include ${clang_BINARY_DIR}/include  )
 
+# FIX linking error: "typeinfo for clang::ASTConsumer"
+if (MSVC)
+	target_compile_options(foundationTool PRIVATE /GR-)
+else()
+	target_compile_options(foundationTool PRIVATE -fno-rtti)  	
+endif(MSVC)
+
+
+
 # Minimum set of the required Clang libraries for the tool
-target_link_libraries(foundationTool PRIVATE 
-	clangAST 
-	clangBasic 
-	clangDriver 
-	clangFrontend 
-	clangRewriteFrontend 
-	clangStaticAnalyzerFrontend 
-	clangTooling  )
+target_link_libraries(foundationTool PRIVATE ${LLVM_LIB_DEPENDENCIES} ${CLANG_LIB_DEPENDENCIES} )
+	# clangAST 
+	# clangBasic 
+	# clangDriver 
+	# clangFrontend 
+	# clangFrontendTool
+	# clangRewriteFrontend 
+	# clangStaticAnalyzerFrontend 
+	# clangTooling  )
 

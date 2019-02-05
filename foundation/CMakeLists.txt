@@ -40,6 +40,12 @@ set ( FOUNDATION_SOURCE_FILES
 )
 
 
+# include_directories(src)
+include_directories(platform)
+include_directories(.)
+include_directories(${FOUNDATION_AUTOGEN_DIR})
+
+
 if(MACOSX OR APPLE)
 	file( GLOB FOUNDATION_PLATFORM_INCLUDE  "platform/mac/*.h" )
 elseif(LINUX)
@@ -56,24 +62,34 @@ include(AutoGenerate)
 
 set(FOUNDATION_AUTOGEN_FILES "")
 
+# FOUNDATION_INCLUDE_DIRS
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+  list(APPEND FOUNDATION_INCLUDE_DIRS "${dir}" )
+endforeach()
+
+# add compiler implicit include dirs
+set( IMPLICIT_INCLUDE_DIRECTORIES "${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES}" )
+if (darwin)
+	set( IMPLICIT_INCLUDE_DIRECTORIES "${IMPLICIT_INCLUDE_DIRECTORIES}/c++/v1" )
+endif(darwin)
+
+list(APPEND FOUNDATION_INCLUDE_DIRS "${IMPLICIT_INCLUDE_DIRECTORIES}" )
+message( "\n FOUNDATION_INCLUDE_DIRS  " ${FOUNDATION_INCLUDE_DIRS} " .. " )
+
 build_autogen(
 	EXECUTABLE_TOOL		foundationTool
     AUTOGEN_DIR 		"${CMAKE_CURRENT_BINARY_DIR}/autogen"
     AUTOGEN_POSTFIX     "autogen"
     PROC_FILES 			${FOUNDATION_PROC_FILES}
-    
+    INCLUDE_DIRS 		${FOUNDATION_INCLUDE_DIRS}
+
     OUT_AUTOGEN_FILES 	FOUNDATION_AUTOGEN_FILES
 	)
 
 message(warning "\n FOUNDATION_AUTOGEN_FILES " ${FOUNDATION_AUTOGEN_FILES} )
 
 source_group("autogen" FILES ${FOUNDATION_AUTOGEN_FILES} )
-
-
-# include_directories(src)
-include_directories(platform)
-include_directories(.)
-include_directories(${FOUNDATION_AUTOGEN_DIR})
 
 
 if(BUILD_FOUNDATION_SHARED)

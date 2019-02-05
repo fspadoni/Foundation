@@ -1,6 +1,12 @@
 
 include(CMakeParseArguments)
 
+function(prepend VAR PREFIX)
+  set( ${VAR} ${PREFIX}${VAR}  PARENT_SCOPE)
+  message(warning "\n VAR  " ${VAR}  )
+endfunction(prepend)
+
+
 function(build_autogen)
 
     set(oneValueArgs
@@ -13,6 +19,7 @@ function(build_autogen)
     set(multiValueArgs 
 
         PROC_FILES
+        INCLUDE_DIRS
         OUT_AUTOGEN_FILES
         )
 
@@ -56,9 +63,27 @@ function(build_autogen)
         list(APPEND AUTOGEN_FILES ${AUTOGEN_FILE} )
     endforeach ()
 
+    #list(TRANSFORM ARGS_INCLUDE_DIRS PREPEND "-I" )
+
+    foreach (include_dir ${ARGS_INCLUDE_DIRS})
+        # set( ${include_dir}  "-I${include_dir}")  
+        # message(warning "\n include_dir  " ${include_dir}  )
+        list(APPEND COMMAND_LINE_INCLUDE_DIRS "-I${include_dir}" )
+        message(warning "\n COMMAND_LINE_INCLUDE_DIRS  " ${COMMAND_LINE_INCLUDE_DIRS}  )
+    endforeach ()
+
+    # SET(${ARGS_INCLUDE_DIRS} "${COMMAND_LINE_INCLUDE_DIRS}" PARENT_SCOPE)
+
+    # foreach(dir ${ARGS_INCLUDE_DIRS})
+    #     list(APPEND INCLUDE_DIRS -I"${dir}" PARENT_SCOPE )
+    #     message( "\n dir  " ${dir} " .. " )
+    # endforeach()
+    # SET(${ARGS_INCLUDE_DIRS} "${INCLUDE_DIRS}" )
+    # message( "\n ARGS_INCLUDE_DIRS  " ${ARGS_INCLUDE_DIRS} " .. " )
+
     add_custom_command(
         OUTPUT ${AUTOGEN_FILES}
-        COMMAND ${ARGS_EXECUTABLE_TOOL}   ${ARGS_AUTOGEN_DIR}  ${ARGS_PROC_FILES} 
+        COMMAND ${ARGS_EXECUTABLE_TOOL}   ${ARGS_AUTOGEN_DIR}  ${ARGS_PROC_FILES} ${COMMAND_LINE_INCLUDE_DIRS}
         MAIN_DEPENDENCY ${PROC_FILES}
         COMMENT " .. Generating files with ${ARGS_EXECUTABLE_TOOL} "
     )
